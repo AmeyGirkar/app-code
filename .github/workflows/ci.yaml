@@ -102,6 +102,8 @@ jobs:
           git config --global push.autoSetupRemote true
           git config --global pull.rebase true
 
+      # Update promote-environments job steps
+      # Update promote-environments job steps
       - name: Clone GitOps Config Repo
         run: |
           echo "Cloning config repo $CONFIG_REPO_NAME"
@@ -109,37 +111,52 @@ jobs:
           cd $CONFIG_REPO_NAME
           
           echo "Processing environment: ${{ matrix.environment }}"
-          git fetch origin
-
-          if [[ "${{ matrix.environment }}" == "sandbox" ]]; then
-            git checkout sandbox || git checkout -b sandbox
-          elif [[ "${{ matrix.environment }}" == "qa" ]]; then
-            git checkout qa || git checkout -b qa
-          elif [[ "${{ matrix.environment }}" == "preprod" ]]; then
-            git checkout preprod || git checkout -b preprod
-          elif [[ "${{ matrix.environment }}" == "qa-test" ]]; then
-            BRANCH_NAME="itr-${PR_SOURCE_BRANCH}-qa-test"
-            git checkout "$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
-          elif [[ "${{ matrix.environment }}" == "sandbox-test" ]]; then
-            BRANCH_NAME="itr-${PR_SOURCE_BRANCH}-sandbox-test"
-            git checkout "$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
-          fi
-
-      - name: Update Image Tag
-        run: |
-          cd $CONFIG_REPO_NAME
-          sed -i "s,tag:.*,tag: ${{ github.run_number }}," values.yaml
-          cat values.yaml
-
+          git fetch --all
+      
+          # Branch handling logic
+          case "${{ matrix.environment }}" in
+            sandbox)
+              git checkout sandbox || git checkout -b sandbox
+              git branch --set-upstream-to=origin/sandbox sandbox || true
+              ;;
+            qa)
+              git checkout qa || git checkout -b qa
+              git branch --set-upstream-to=origin/qa qa || true
+              ;;
+            preprod)
+              git checkout preprod || git checkout -b preprod
+              git branch --set-upstream-to=origin/preprod preprod || true
+              ;;
+            qa-test)
+              BRANCH_NAME="itr-${PR_SOURCE_BRANCH}-qa-test"
+              git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" 2>/dev/null || {
+                git checkout --orphan "$BRANCH_NAME"
+                git commit --allow-empty -m "Initial commit"
+                git push -u origin "$BRANCH_NAME"
+              }
+              ;;
+            sandbox-test)
+              BRANCH_NAME="itr-${PR_SOURCE_BRANCH}-sandbox-test"
+              git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" 2>/dev/null || {
+                git checkout --orphan "$BRANCH_NAME"
+                git commit --allow-empty -m "Initial commit"
+                git push -u origin "$BRANCH_NAME"
+              }
+              ;;
+          esac
+      
       - name: Commit and Push Changes
         run: |
           cd $CONFIG_REPO_NAME
           git add .
           git commit -m "Update image tag to ${{ github.run_number }} in ${{ matrix.environment }} environment" || echo "No changes to commit"
-          git pull --rebase
-          git push --force-with-lease
-
-      - name: Verify Remote Tracking
-        run: |
-          cd $CONFIG_REPO_NAME
-          git branch -vv
+          
+          # Safe sync with remote
+          git fetch origin
+          if git rev-parse --abbrev-ref HEAD | grep -qE '^(sandbox|qa|preprod)$'; then
+            git pull --rebase origin $(git rev-parse --abbrev-ref HEAD)
+          else
+            git pull --rebase origin "$BRANCH_NAME" || true
+          fi
+          
+          git push origin HEAD --force-with-lease
