@@ -5,7 +5,7 @@ echo '<!DOCTYPE html>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
          #solar-system {
-            background: url("./solar-system-9.png") center center;
+            background: url("./images/solar-system-9.png") center center;
             background-repeat: no-repeat;			  
             background-size: cover;
             content: "";
@@ -24,7 +24,7 @@ echo '<!DOCTYPE html>
             display: flex;
             align-items: center;
             justify-content: center;
-            background: url("./background.png");
+            background: url("./images/background.png");
             height: 100vh;
             margin: 0;
          }
