@@ -42,7 +42,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t app .
-          docker tag ameyg/app:$VERSION
+          docker tag app ameyg/app:$VERSION
           docker push ameyg/app:$VERSION
 
   promote-to-dev-environment:
