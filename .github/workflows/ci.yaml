@@ -45,7 +45,7 @@ jobs:
           docker tag app ameyg/app:$VERSION
           docker push ameyg/app:$VERSION
 
- setup:
+  setup:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     outputs:
@@ -55,10 +55,8 @@ jobs:
         id: get-labels
         run: |
           # Filter only valid environment labels
-          LABELS=$(
-            echo '${{ toJSON(github.event.pull_request.labels.*.name) }}' | 
-            jq -r '[.[] | select(. == "sandbox" or . == "qa" or . == "preprod" or . == "qa-test" or . == "sandbox-test")] | unique'
-          )
+          LABELS=$(echo '${{ toJSON(github.event.pull_request.labels.*.name) }}' | 
+            jq -r '[.[] | select(. == "sandbox" or . == "qa" or . == "preprod" or . == "qa-test" or . == "sandbox-test")] | unique')
           echo "Valid environment labels: $LABELS"
           echo "environments=$LABELS" >> $GITHUB_OUTPUT
 
@@ -110,5 +108,4 @@ jobs:
           cd $CONFIG_REPO_NAME
           git add .
           git commit -m "Update image tag to ${{ github.run_number }} in ${{ matrix.environment }} environment"
-          git push
           git push
