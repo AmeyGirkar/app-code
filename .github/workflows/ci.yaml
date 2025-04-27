@@ -1,7 +1,7 @@
 name: ci
 
 env:
-  CONFIG_REPO_NAME: app-code
+  CONFIG_REPO_NAME: app-helmfile
 
 on:
   pull_request:
@@ -39,9 +39,9 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t $NAME .
-          docker tag $NAME:latest $IMAGE_REPO/$NAME:$VERSION
-          docker push $IMAGE_REPO/$NAME:$VERSION
+          docker build -t app .
+          docker tag ameyg/app:$VERSION
+          docker push ameyg/app:$VERSION
 
   promote-to-dev-environment:
     if: ${{ github.event.label.name == 'sandox' }}
