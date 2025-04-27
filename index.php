@@ -5,7 +5,7 @@ echo '<!DOCTYPE html>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
 		#solar-system {
-		   background: url("http://139.59.21.103:3000/siddharth/solar-system/raw/branch/main/images/solar-system-9.png")   center center;
+		   background: url("./images/solar-system-9.png")   center center;
            background-repeat: no-repeat;			  
 		   background-size: cover;
 		   content: "";
@@ -23,9 +23,15 @@ echo '<!DOCTYPE html>
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			background: url("http://139.59.21.103:3000/siddharth/solar-system/raw/branch/main/images/background.png");
+			background: url("./images/background.png");
 		}
-		
+		.foreground-text {
+	            font-size: 2rem;
+	            color: white;
+	            font-weight: bold;
+	            z-index: 1; /* Ensures text appears above the solar system */
+	            position: absolute;
+	         }
 /* 		.shadow {
 			  animation: rainbow 2s linear infinite;
 			} */
@@ -34,7 +40,7 @@ echo '<!DOCTYPE html>
       </style>
    </head>
    <body>
-	   			<div> Amey-version1 </div>
+	   			 <div class="foreground-text">Amey-version 1</div>
 				 <div id="solar-system"> </div>
 
    </body>
