@@ -2,6 +2,7 @@ name: ci
 
 env:
   CONFIG_REPO_NAME: app-helmfile
+  PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
 
 on:
   pull_request:
