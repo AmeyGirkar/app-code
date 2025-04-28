@@ -4,6 +4,7 @@ echo '<!DOCTYPE html>
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
+
 		#solar-system {
 		   background: url("./images/solar-system-9.png")   center center;
            background-repeat: no-repeat;			  
@@ -35,14 +36,12 @@ echo '<!DOCTYPE html>
 /* 		.shadow {
 			  animation: rainbow 2s linear infinite;
 			} */
-
-
-      </style>
+      
+    </style>
    </head>
    <body>
-	   			 <div class="foreground-text">Amey-version 1</div>
-				 <div id="solar-system"> </div>
 
+	   			 <div class="foreground-text">Amey-version 7 </div>
+				 <div id="solar-system"> </div>
    </body>
-</html>
-';
+</html>';
