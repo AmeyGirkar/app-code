@@ -41,7 +41,7 @@ echo '<!DOCTYPE html>
    </head>
    <body>
 
-	   			 <div class="foreground-text">Amey-version 6 </div>
+	   			 <div class="foreground-text">Amey-version 7 </div>
 				 <div id="solar-system"> </div>
    </body>
 </html>';
