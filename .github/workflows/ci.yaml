@@ -3,6 +3,7 @@ name: ci
 env:
   CONFIG_REPO_NAME: app-helmfile
 on:
+  workflow_dispatch:
   pull_request:
     types: [labeled, opened, synchronize]
   push:
